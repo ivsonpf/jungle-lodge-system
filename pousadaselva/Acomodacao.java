@@ -60,4 +60,9 @@ public abstract class Acomodacao {
         if (this.qtdCamaSolteiro > 0) System.out.println("Camas de Solteiro: " + this.qtdCamaSolteiro);
         if (this.quantidadeRedes > 0) System.out.println("Armadores de Rede: " + this.quantidadeRedes);
     }
+
+    // Getter necessário para o Menu da classe Main conseguir encontrar o quarto
+    public int getNumeroDoQuarto() {
+        return this.numeroDoQuarto;
+    }
 }
