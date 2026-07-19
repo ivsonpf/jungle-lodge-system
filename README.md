@@ -6,6 +6,16 @@ O sistema simula o catálogo e a gestão de acomodações perfeitamente integrad
 
 ---
 
+## 📊 Modelagem do Sistema
+
+Antes da codificação, o sistema foi estruturado através de um Diagrama de Classes UML, definindo claramente as heranças, atributos protegidos e contratos de interface.
+
+<p align="center">
+  <img src="Docs/diagrama-pousada.png" alt="Diagrama de Classes UML da PousadaSelva" width="850">
+</p>
+
+---
+
 ## 🎯 Objetivo Acadêmico
 
 Este projeto tem como finalidade demonstrar o domínio sobre os seguintes conceitos de POO:
