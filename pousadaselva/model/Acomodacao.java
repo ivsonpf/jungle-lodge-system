@@ -1,4 +1,4 @@
-package pousadaselva;
+package pousadaselva.model;
 
 public abstract class Acomodacao { 
     
@@ -64,5 +64,10 @@ public abstract class Acomodacao {
     // Getter necessário para o Menu da classe Main conseguir encontrar o quarto
     public int getNumeroDoQuarto() {
         return this.numeroDoQuarto;
+    }
+
+    // Getter para a reserva e a calculadora conseguirem ler o preço
+    public double getPreco() {
+        return this.preco; // Se na sua classe o atributo estiver nomeado diferente, ajuste aqui!
     }
 }

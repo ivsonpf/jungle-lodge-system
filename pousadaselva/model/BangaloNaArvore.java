@@ -1,4 +1,6 @@
-package pousadaselva;
+package pousadaselva.model;
+
+import pousadaselva.service.RegrasSustentabilidade;
 
 public class BangaloNaArvore extends Acomodacao implements RegrasSustentabilidade {
 

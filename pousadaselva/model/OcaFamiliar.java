@@ -1,4 +1,6 @@
-package pousadaselva;
+package pousadaselva.model;
+
+import pousadaselva.service.RegrasSustentabilidade;
 
 public class OcaFamiliar extends Acomodacao implements RegrasSustentabilidade {
 

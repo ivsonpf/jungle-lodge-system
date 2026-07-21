@@ -1,4 +1,4 @@
-package pousadaselva;
+package pousadaselva.service;
 
 public interface RegrasSustentabilidade {
     
