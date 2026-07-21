@@ -27,7 +27,6 @@ Projeto prático desenvolvido para a disciplina de Linguagem de Programação II
 O diagrama abaixo ilustra a modelagem orientada a objetos do sistema, dividida por pacotes funcionais:
 
 ![Diagrama de Classes do Sistema](./Docs/diagrama-pousada-v2.png)
-*(Nota: Se o seu arquivo novo estiver com outro nome, basta atualizar o final do link acima, ex: `./Docs/diagrama-classes-final.png`)*
 
 ---
 
