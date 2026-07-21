@@ -1,54 +1,44 @@
-# 🌿 Jungle Lodge System (PousadaSelva)
+# 🏡 Pousada Selva – Gestão de Reservas de Ecoturismo
 
-Um sistema em **Java** desenvolvido para o gerenciamento de reservas de uma pousada de ecoturismo na Amazônia. Este projeto foi construído com foco estrito na aplicação prática dos pilares da **Programação Orientada a Objetos (POO)**.
+Sistema desenvolvido em Java orientada a objetos para a gestão de acomodações, hóspedes nacionais e estrangeiros, pacotes de passeios e cálculo de tarifas turísticas, contextualizado na região amazônica de Manaus e do Rio Negro.
 
-O sistema simula o catálogo e a gestão de acomodações perfeitamente integradas à natureza, com regras de negócio focadas em sustentabilidade e preservação ambiental.
-
----
-
-## 📊 Modelagem do Sistema
-
-Antes da codificação, o sistema foi estruturado através de um Diagrama de Classes UML, definindo claramente as heranças, atributos protegidos e contratos de interface.
-
-<p align="center">
-  <img src="Docs/diagrama-pousada.png" alt="Diagrama de Classes UML da PousadaSelva" width="850">
-</p>
+## 👥 Equipe
+* **Bryan Richard Rocha do Nascimento**
+* **Ivson Padilha Freire**
 
 ---
 
-## 🎯 Objetivo Acadêmico
+## 🚀 Sobre o Projeto (AV3 - CETAM)
+Projeto prático desenvolvido para a disciplina de Linguagem de Programação III (Java), aplicando os pilares da Programação Orientada a Objetos (POO) em um cenário real de ecoturismo regional.
 
-Este projeto tem como finalidade demonstrar o domínio sobre os seguintes conceitos de POO:
-
-*   **Abstração e Encapsulamento:** Utilização de uma classe mãe abstrata (`Acomodacao`) com modificadores de acesso `protected` para proteger os dados sensíveis dos quartos (como preço e disponibilidade), permitindo o acesso direto apenas pelas subclasses herdeiras.
-*   **Herança (`extends`):** Criação de subclasses específicas que herdam características gerais de conforto e estrutura da classe mãe, reduzindo a repetição de código.
-*   **Polimorfismo (`@Override`):** Sobrescrita do método `exibirDetalhes()` para que cada tipo de acomodação apresente sua ficha técnica de forma única e personalizada no terminal.
-*   **Interfaces (`implements`):** Implementação de um "contrato" obrigatório (`RegrasSustentabilidade`) garantindo que todas as acomodações do sistema possuam métodos de tratamento de esgoto e controle de cota de água diária.
-*   **Coleções Genéricas:** Uso de `ArrayList<Acomodacao>` para gerenciar dinamicamente a frota de quartos na memória durante a execução do programa.
-
----
-
-## 🛖 Arquitetura das Acomodações
-
-O sistema conta com três tipos exclusivos de estadias, inspiradas na arquitetura e vivência amazônica:
-
-1.  **🌊 Cabana Flutuante:** Estruturas modulares sobre as águas, possuindo atributos exclusivos como profundidade do rio no local e disponibilidade de barco de acesso.
-2.  **🌳 Bangalô na Árvore:** Acomodações nas copas das árvores, destacando-se pela altura do solo e métodos de acesso (ex: pontes suspensas).
-3.  **🛖 Oca Familiar (Palafitas):** Inspirada nas habitações ribeirinhas e nativas, une a estrutura suspensa das estacas de madeira com a proximidade dos rios, considerando o nível da água na época da cheia.
+### ✨ Requisitos Técnicos Implementados
+* **Encapsulamento:** Atributos privados e protegidos com métodos de acesso (`getters`/`setters`).
+* **Herança:** Hierarquia nas classes de `Acomodacao` (Bangalô, Cabana Flutuante e Oca Familiar) e `Hospede` (Nacional e Estrangeiro).
+* **Polimorfismo:** Sobrescrita de métodos de exibição de detalhes e cálculo de tarifas em tempo de execução.
+* **Interfaces:** Contrato de sustentabilidade aplicado às acomodações (`RegrasSustentabilidade`).
+* **Composição:** A classe `Reserva` agrega instâncias de `Hospede`, `Acomodacao` e uma lista de `PacoteTuristico`.
+* **Coleções da API Java:** Uso extensivo de `ArrayList` para gerenciar dados em memória.
+* **Tratamento de Exceções:** Blocos `try-catch` robustos para blindar o menu contra entradas inválidas.
+* **CRUD Completo via Console:** Menu interativo estruturado em pacotes (`model`, `service`, `main`).
 
 ---
 
-## 💻 Tecnologias Utilizadas
+## 📊 Arquitetura do Sistema (Diagrama de Classes)
+O diagrama abaixo ilustra a modelagem orientada a objetos do sistema, dividida por pacotes funcionais:
 
-*   **Linguagem:** Java
-*   **IDE:** Visual Studio Code
-*   **Controle de Versão:** Git / GitHub
-*   **Ambiente de Desenvolvimento:** Linux
+![Diagrama de Classes do Sistema](./Docs/diagrama-pousada-v2.png)
+*(Nota: Se o seu arquivo novo estiver com outro nome, basta atualizar o final do link acima, ex: `./Docs/diagrama-classes-final.png`)*
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## ⚙️ Pré-requisitos e Instruções de Execução
 
-1. Clone este repositório em sua máquina local:
+Para rodar este projeto em sua máquina, você precisará ter instalado:
+* **Java JDK** (Versão 11 ou superior recomendada)
+* Uma IDE de sua preferência (VS Code, IntelliJ ou Eclipse) ou terminal com suporte ao compilador Java (`javac`).
+
+### 📥 Passos para Executar:
+
+1. Clone o repositório em sua máquina:
    ```bash
-   git clone [https://github.com/ivsonpf/jungle-lodge-system.git](https://github.com/ivsonpf/jungle-lodge-system.git)
+   git clone [https://github.com/seu-usuario/jungle-lodge-system.git](https://github.com/seu-usuario/jungle-lodge-system.git)
