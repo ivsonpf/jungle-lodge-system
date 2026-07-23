@@ -11,16 +11,15 @@ public class TelaMenuPrincipal extends JFrame {
 
     public TelaMenuPrincipal() {
         setTitle("Samaúma Pousada Boutique - Menu Principal");
-        // Aumentei o tamanho da janela para HD (1280x720) para acomodar a nova imagem widescreen
         setSize(1280, 720); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Lembre-se de renomear a imagem lá na pasta img!
+        // --- 1. CARREGANDO A NOVA IMAGEM DE FUNDO ---
         try {
             imagemFundo = ImageIO.read(new File("img/fundo_samauma-v2.png")); 
         } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem: " + e.getMessage());
+            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
         }
 
         JPanel painelFundo = new JPanel() {
@@ -35,26 +34,47 @@ public class TelaMenuPrincipal extends JFrame {
 
         painelFundo.setLayout(null); 
 
-        // --- NOVO PAINEL DE BOTÕES (MENU INFERIOR) ---
+        // --- 2. CONFIGURANDO O PAINEL DE BOTÕES ---
         JPanel painelMenu = new JPanel();
-        // Mudou para: 1 linha, 4 colunas, com 20px de espaço entre eles na horizontal
-        painelMenu.setLayout(new GridLayout(1, 4, 20, 0)); 
+        painelMenu.setLayout(new GridLayout(1, 4, 25, 0)); 
         painelMenu.setOpaque(false);
+        
+        // Suas coordenadas perfeitas
+        painelMenu.setBounds(100, 510, 1050, 120); 
 
-        // Posição ajustada para a parte de baixo da tela (Y=520) e bem largo (1000px)
-        painelMenu.setBounds(140, 520, 1000, 50);
+        int larguraArte = 245;
+        int alturaArte = 120;
 
-        // Removi os números como você preferiu antes
-        JButton btnCatalogo = new JButton("Catálogo de Acomodações");
-        JButton btnPacotes = new JButton("Pacotes Turísticos");
-        JButton btnNovaReserva = new JButton("Cadastrar Nova Reserva");
-        JButton btnListarReservas = new JButton("Listar Reservas Ativas");
+        // --- 3. CRIANDO OS BOTÕES COM AS SKINS ---
+        JButton btnCatalogo = criarBotaoComImagem("img/botao1-menuprincipal.png", larguraArte, alturaArte);
+        JButton btnPacotes = criarBotaoComImagem("img/botao2-menuprincipal.png", larguraArte, alturaArte);
+        JButton btnNovaReserva = criarBotaoComImagem("img/botao3-menuprincipal.png", larguraArte, alturaArte);
+        JButton btnListarReservas = criarBotaoComImagem("img/botao4-menuprincipal.png", larguraArte, alturaArte);
 
-        estilizarBotao(btnCatalogo);
-        estilizarBotao(btnPacotes);
-        estilizarBotao(btnNovaReserva);
-        estilizarBotao(btnListarReservas);
+        // --- 4. AÇÕES DOS BOTÕES (COM FECHAMENTO DE TELA) ---
+        
+        // Botão 1: Abre Catálogo e fecha o Menu
+        btnCatalogo.addActionListener(e -> {
+            TelaCatalogo telaCatalogo = new TelaCatalogo();
+            telaCatalogo.setVisible(true);
+            dispose(); // Fecha a tela atual (Menu)
+        });
 
+        // Botão 2: Abre Pacotes Turísticos e fecha o Menu
+        btnPacotes.addActionListener(e -> {
+            TelaPacotes telaPacotes = new TelaPacotes();
+            telaPacotes.setVisible(true);
+            dispose(); // Fecha a tela atual (Menu)
+        });
+
+        // Botão 3: Abre Cadastro e fecha o Menu
+        btnNovaReserva.addActionListener(e -> {
+            TelaCadastroHospede telaCadastro = new TelaCadastroHospede();
+            telaCadastro.setVisible(true);
+            dispose(); // Fecha a tela atual (Menu)
+        });
+
+        // Adicionando os botões na tela
         painelMenu.add(btnCatalogo);
         painelMenu.add(btnPacotes);
         painelMenu.add(btnNovaReserva);
@@ -62,29 +82,35 @@ public class TelaMenuPrincipal extends JFrame {
 
         painelFundo.add(painelMenu);
         add(painelFundo);
+        
+        // --- A MÁGICA DA ATUALIZAÇÃO FORÇADA ---
+        // Garante que o menu principal seja renderizado perfeitamente na primeira abertura
+        revalidate(); 
+        repaint();    
     }
 
-    private void estilizarBotao(JButton botao) {
-        botao.setFont(new Font("SansSerif", Font.BOLD, 15));
+    // --- FUNÇÃO PARA CRIAR O BOTÃO INVISÍVEL COM SKIN ---
+    private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
+        JButton botao = new JButton();
+
+        try {
+            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
+            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+            botao.setIcon(new ImageIcon(imagemEscalada));
+        } catch (Exception e) {
+            System.out.println("Não foi possível carregar a arte: " + caminhoImagem);
+        }
+
+        // Removendo o visual padrão (ATENÇÃO: Não digite os avisos cinzas da sua IDE aqui dentro!)
+        botao.setContentAreaFilled(false);  
+        botao.setBorderPainted(false);      
+        botao.setFocusPainted(false);       
+        botao.setOpaque(false);             
         
-        // Fundo verde bem escuro para mesclar com o papel
-        botao.setBackground(new Color(15, 30, 20)); 
-        
-        // Letra em Dourado para combinar com a logo
-        Color corDourada = new Color(212, 175, 55);
-        botao.setForeground(corDourada);
-        
-        botao.setFocusPainted(false);
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        // --- TEXTO CENTRALIZADO ---
-        botao.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        // Borda fina dourada com espaço interno
-        botao.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(corDourada, 1),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
+        // Colocando o cursor de mãozinha
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+
+        return botao;
     }
 
     public static void main(String[] args) {
