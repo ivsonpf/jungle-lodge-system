@@ -2,9 +2,6 @@ package pousadaselva.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class TelaPacotes extends JFrame {
     private Image imagemFundo;
@@ -15,12 +12,8 @@ public class TelaPacotes extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
 
-        // Carrega a imagem de fundo dos pacotes
-        try {
-            imagemFundo = ImageIO.read(new File("img/tela-pacotes.png")); 
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
-        }
+        // Puxa o fundo direto do cofre na memória RAM!
+        imagemFundo = GerenciadorDeImagens.obterImagemOriginal("img/tela-pacotes.png");
 
         JPanel painelFundo = new JPanel() {
             @Override
@@ -118,17 +111,13 @@ public class TelaPacotes extends JFrame {
         return card; // Retorna SÓ o texto, sem botão!
     }
 
-    // --- FUNÇÃO PARA RENDERIZAR SKINS EM BOTÕES ---
+    // --- FUNÇÃO PARA RENDERIZAR SKINS EM BOTÕES CONECTADA AO GERENCIADOR ---
     private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
         JButton botao = new JButton();
 
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
-            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            botao.setIcon(new ImageIcon(imagemEscalada));
-        } catch (Exception e) {
-            System.out.println("Não foi possível carregar a arte: " + caminhoImagem);
-        }
+        // Puxa do nosso cofre global!
+        Icon icone = GerenciadorDeImagens.obterIcone(caminhoImagem, largura, altura);
+        if (icone != null) botao.setIcon(icone);
 
         botao.setContentAreaFilled(false);  
         botao.setBorderPainted(false);      

@@ -2,9 +2,6 @@ package pousadaselva.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class TelaMenuPrincipal extends JFrame {
     private Image imagemFundo;
@@ -15,12 +12,7 @@ public class TelaMenuPrincipal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // --- 1. CARREGANDO A NOVA IMAGEM DE FUNDO ---
-        try {
-            imagemFundo = ImageIO.read(new File("img/fundo_samauma-v2.png")); 
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
-        }
+        imagemFundo = GerenciadorDeImagens.obterImagemOriginal("img/fundo_samauma-v2.png");
 
         JPanel painelFundo = new JPanel() {
             @Override
@@ -89,19 +81,15 @@ public class TelaMenuPrincipal extends JFrame {
         repaint();    
     }
 
-    // --- FUNÇÃO PARA CRIAR O BOTÃO INVISÍVEL COM SKIN ---
+    // --- FUNÇÃO PARA CRIAR O BOTÃO INVISÍVEL COM SKIN (ATUALIZADA PARA CACHE) ---
     private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
         JButton botao = new JButton();
 
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
-            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            botao.setIcon(new ImageIcon(imagemEscalada));
-        } catch (Exception e) {
-            System.out.println("Não foi possível carregar a arte: " + caminhoImagem);
-        }
+        // Puxa direto do nosso Gerenciador de Imagens!
+        Icon icone = GerenciadorDeImagens.obterIcone(caminhoImagem, largura, altura);
+        if (icone != null) botao.setIcon(icone);
 
-        // Removendo o visual padrão (ATENÇÃO: Não digite os avisos cinzas da sua IDE aqui dentro!)
+        // Removendo o visual padrão 
         botao.setContentAreaFilled(false);  
         botao.setBorderPainted(false);      
         botao.setFocusPainted(false);       

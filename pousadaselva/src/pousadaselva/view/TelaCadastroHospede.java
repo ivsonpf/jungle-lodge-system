@@ -2,9 +2,6 @@ package pousadaselva.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class TelaCadastroHospede extends JFrame {
     private Image imagemFundo;
@@ -15,12 +12,7 @@ public class TelaCadastroHospede extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // --- CARREGANDO O FUNDO DA TELA ---
-        try {
-            imagemFundo = ImageIO.read(new File("img/tela-cadastro-v2.png"));
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
-        }
+        imagemFundo = GerenciadorDeImagens.obterImagemOriginal("img/tela-cadastro-v2.png");
 
         JPanel painelFundo = new JPanel() {
             @Override
@@ -58,14 +50,14 @@ public class TelaCadastroHospede extends JFrame {
         fundoDoc.setBounds(200, 130, 330, 40); // Posição da arte
         
         JTextField txtDoc = criarInputTransparente(fonteInput);
-        txtDoc.setBounds(220, 130, 260, 40); // Posição do texto (Ajuste X e Largura para não encostar na borda)
+        txtDoc.setBounds(220, 130, 260, 40); // Posição do texto 
 
         // Botão Buscar (COM SKIN)
         JButton btnBuscar = criarBotaoComImagem("img/botao-buscar.png", 130, 70);
         btnBuscar.setBounds(520, 130, 120, 40);
 
         painelFundo.add(lblDoc); 
-        painelFundo.add(txtDoc); painelFundo.add(fundoDoc); // Ordem importa: Texto primeiro para ficar por cima!
+        painelFundo.add(txtDoc); painelFundo.add(fundoDoc); 
         painelFundo.add(btnBuscar);
         
         // 2. NOME COMPLETO
@@ -81,8 +73,6 @@ public class TelaCadastroHospede extends JFrame {
         painelFundo.add(txtNome); painelFundo.add(fundoNome);
 
         // 3. ESTRANGEIRO (CHECKBOX COM SKIN)
-        // ---> AJUSTE AQUI: Os dois últimos números (300 e 40) são a Largura e a Altura do componente!
-        // Se o texto "Hóspede Estrangeiro?" ficar cortado, aumente o 300 para 350, 400, etc.
         JCheckBox chkEstrangeiro = criarCheckBoxComSkin("Hóspede Estrangeiro?", corDourada, fonteLabel, 200, 280, 250, 40);
         painelFundo.add(chkEstrangeiro);
 
@@ -147,8 +137,6 @@ public class TelaCadastroHospede extends JFrame {
         // BLOCO INFERIOR DIREITO: PACOTES
         // =========================================================
 
-        // Checkboxes com as suas skins customizadas
-        // ---> AJUSTE AQUI: Novamente, os dois últimos números (350 e 40) são a Largura e a Altura de cada um!
         JCheckBox chkTrilha = criarCheckBoxComSkin("Trilha Ecológica (R$ 150)", corDourada, fonteLabel, 750, 450, 350, 40);
         JCheckBox chkJacare = criarCheckBoxComSkin("Focagem de Jacarés (R$ 200)", corDourada, fonteLabel, 750, 500, 350, 40);
         JCheckBox chkEncontro = criarCheckBoxComSkin("Encontro das Águas (R$ 350)", corDourada, fonteLabel, 750, 550, 350, 40);
@@ -156,16 +144,15 @@ public class TelaCadastroHospede extends JFrame {
         painelFundo.add(chkTrilha); painelFundo.add(chkJacare); painelFundo.add(chkEncontro);
 
         // =========================================================
-        // BOTÃO FINALIZAR (COM SKIN E AÇÃO DE NAVEGAÇÃO)
+        // BOTÃO FINALIZAR 
         // =========================================================
         JButton btnFinalizar = criarBotaoComImagem("img/botao-finalizar.png", 190, 90);
         btnFinalizar.setBounds(1030, 570, 220, 60);
         
-        // Evento de clique para abrir o extrato
         btnFinalizar.addActionListener(e -> {
             TelaExtratoReserva telaExtrato = new TelaExtratoReserva();
             telaExtrato.setVisible(true);
-            dispose(); // Fecha a tela de cadastro atual
+            dispose(); 
         });
         
         painelFundo.add(btnFinalizar);
@@ -177,7 +164,7 @@ public class TelaCadastroHospede extends JFrame {
     }
 
     // =========================================================
-    // FUNÇÕES AUXILIARES DE ESTILIZAÇÃO E DESACOPLAMENTO
+    // FUNÇÕES AUXILIARES CONECTADAS AO GERENCIADOR
     // =========================================================
 
     private JLabel criarLabel(String texto, Color cor, Font fonte, int x, int y, int larg, int alt) {
@@ -188,36 +175,26 @@ public class TelaCadastroHospede extends JFrame {
         return label;
     }
 
-    // Cria apenas a imagem de fundo (Sua arte PNG)
     private JLabel criarImagemLabel(String caminho, int largura, int altura) {
         JLabel labelImagem = new JLabel();
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminho);
-            Image imgEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            labelImagem.setIcon(new ImageIcon(imgEscalada));
-        } catch (Exception e) {
-            System.out.println("Arte não encontrada: " + caminho);
-        }
+        Icon icone = GerenciadorDeImagens.obterIcone(caminho, largura, altura);
+        if (icone != null) labelImagem.setIcon(icone);
         return labelImagem;
     }
 
-    // Cria apenas o campo de digitação totalmente invisível
     private JTextField criarInputTransparente(Font fonte) {
         JTextField campo = new JTextField();
         campo.setFont(fonte);
-        campo.setForeground(Color.WHITE); // Texto em branco
-        campo.setCaretColor(Color.WHITE); // Tracinho de digitar piscando em branco
-        campo.setOpaque(false); // Remove o fundo cinza
-        campo.setBorder(null);  // Arranca a borda do Java
+        campo.setForeground(Color.WHITE); 
+        campo.setCaretColor(Color.WHITE); 
+        campo.setOpaque(false); 
+        campo.setBorder(null);  
         return campo;
     }
 
-    // Cria os checkboxes e injeta as imagens Check-vazio.png e check-selecionado.png
-    // Agora aceitando largura e altura!
     private JCheckBox criarCheckBoxComSkin(String texto, Color cor, Font fonte, int x, int y, int largura, int altura) {
         JCheckBox chk = new JCheckBox(texto);
         
-        // ---> AJUSTE AQUI: O setBounds agora usa a variável "largura" e "altura" que você passa lá em cima
         chk.setBounds(x, y, largura, altura); 
         
         chk.setOpaque(false);
@@ -225,61 +202,47 @@ public class TelaCadastroHospede extends JFrame {
         chk.setFont(fonte);
         chk.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        try {
-            // O ícone da imagem dourada continua 30x30, mas o componente total se ajusta à largura que você definiu
-            Icon iconeVazio = new ImageIcon(new ImageIcon("img/Check-vazio-v2.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-            Icon iconeMarcado = new ImageIcon(new ImageIcon("img/check-selecionado-v3.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        Icon iconeVazio = GerenciadorDeImagens.obterIcone("img/Check-vazio-v2.png", 30, 30);
+        Icon iconeMarcado = GerenciadorDeImagens.obterIcone("img/check-selecionado-v3.png", 30, 30);
             
-            chk.setIcon(iconeVazio);
-            chk.setSelectedIcon(iconeMarcado);
-        } catch (Exception e) {
-            System.out.println("Skins do CheckBox não encontradas.");
-        }
+        if (iconeVazio != null) chk.setIcon(iconeVazio);
+        if (iconeMarcado != null) chk.setSelectedIcon(iconeMarcado);
+        
         return chk;
     }
 
-    // Pinta o ComboBox (Caixa de Seleção) com as cores do seu tema
-    // Pinta o ComboBox e ARRICA o visual padrão do Sistema Operacional
-    // Pinta o ComboBox (Caixa de Seleção) com as cores do seu tema e customiza a seta
     private void estilizarComboBox(JComboBox<String> cmb, Font fonte, Color corTexto) {
-        Color fundoVerde = new Color(15, 30, 15); // O verde bem escuro da caixa
+        Color fundoVerde = new Color(15, 30, 15); 
         
         cmb.setFont(fonte);
         cmb.setBackground(fundoVerde);
         cmb.setForeground(corTexto);
         cmb.setFocusable(false); 
         
-        // --- A MÁGICA PARA CUSTOMIZAR A SETINHA ---
         cmb.setUI(new javax.swing.plaf.basic.BasicComboBoxUI() {
             @Override
             protected JButton createArrowButton() {
-                // Cria uma setinha nova (Direção, Fundo, Sombra, Cor da Seta, Brilho)
                 JButton btnSeta = new javax.swing.plaf.basic.BasicArrowButton(
                     javax.swing.SwingConstants.SOUTH,
-                    fundoVerde, // Cor do fundo do botão (sumindo com o branco!)
-                    fundoVerde, // Cor da sombra
-                    corTexto,   // Cor do triângulo da seta (Dourado)
-                    fundoVerde  // Cor do brilho
+                    fundoVerde, 
+                    fundoVerde, 
+                    corTexto,   
+                    fundoVerde  
                 );
-                // Adiciona uma linha dourada fina só na esquerda para separar a seta do texto
                 btnSeta.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, corTexto));
                 return btnSeta;
             }
         }); 
         
-        // Borda dourada em volta da caixa inteira
         cmb.setBorder(BorderFactory.createLineBorder(corTexto, 1)); 
     }
 
     private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
         JButton botao = new JButton();
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
-            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            botao.setIcon(new ImageIcon(imagemEscalada));
-        } catch (Exception e) {
-            System.out.println("Arte do botão não encontrada: " + caminhoImagem);
-        }
+        
+        Icon icone = GerenciadorDeImagens.obterIcone(caminhoImagem, largura, altura);
+        if (icone != null) botao.setIcon(icone);
+        
         botao.setContentAreaFilled(false);  
         botao.setBorderPainted(false);      
         botao.setFocusPainted(false);       

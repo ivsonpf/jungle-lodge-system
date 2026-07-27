@@ -2,9 +2,6 @@ package pousadaselva.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class TelaExtratoReserva extends JFrame {
     private Image imagemFundo;
@@ -15,12 +12,7 @@ public class TelaExtratoReserva extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // --- CARREGANDO O FUNDO DA TELA ---
-        try {
-            imagemFundo = ImageIO.read(new File("img/tela-extrato-cadastro-v2.png"));
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
-        }
+        imagemFundo = GerenciadorDeImagens.obterImagemOriginal("img/tela-extrato-cadastro-v2.png");
 
         JPanel painelFundo = new JPanel() {
             @Override
@@ -32,8 +24,6 @@ public class TelaExtratoReserva extends JFrame {
             }
         };
         painelFundo.setLayout(null);
-
-        Color corDourada = new Color(212, 175, 55);
 
         // --- BOTÃO VOLTAR ---
         JButton btnVoltar = criarBotaoComImagem("img/botao-voltar.png", 140, 80);
@@ -91,9 +81,8 @@ public class TelaExtratoReserva extends JFrame {
         painelFundo.add(txtExtrato);
 
         // --- BOTÃO CONFIRMAR E SALVAR ---
-        // Você precisa criar essa arte (botao-confirmar.png)
-        JButton btnConfirmar = criarBotaoComImagem("img/botao-salvar-v2.png", 220, 80); // Usando o finalizar temporariamente
-        btnConfirmar.setBounds(530, 565, 220, 80); // Centralizado embaixo do recibo
+        JButton btnConfirmar = criarBotaoComImagem("img/botao-salvar-v2.png", 220, 100); 
+        btnConfirmar.setBounds(530, 590, 220, 100); // Centralizado embaixo do recibo
         btnConfirmar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Reserva Salva com Sucesso no Banco de Dados!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             // Aqui entrará o código do INSERT no banco no futuro
@@ -106,16 +95,16 @@ public class TelaExtratoReserva extends JFrame {
         add(painelFundo);
     }
 
-    // Função Auxiliar para carregar o botão
+    // =========================================================
+    // Função Auxiliar CONECTADA AO GERENCIADOR DE IMAGENS
+    // =========================================================
     private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
         JButton botao = new JButton();
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
-            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            botao.setIcon(new ImageIcon(imagemEscalada));
-        } catch (Exception e) {
-            System.out.println("Arte do botão não encontrada: " + caminhoImagem);
-        }
+        
+        // Puxa do nosso cofre global em vez de ler do HD de novo!
+        Icon icone = GerenciadorDeImagens.obterIcone(caminhoImagem, largura, altura);
+        if (icone != null) botao.setIcon(icone);
+        
         botao.setContentAreaFilled(false);  
         botao.setBorderPainted(false);      
         botao.setFocusPainted(false);       

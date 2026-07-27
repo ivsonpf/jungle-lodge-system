@@ -2,9 +2,6 @@ package pousadaselva.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class TelaCatalogo extends JFrame {
     private Image imagemFundo;
@@ -15,12 +12,7 @@ public class TelaCatalogo extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
 
-        // Carrega a imagem de fundo principal
-        try {
-            imagemFundo = ImageIO.read(new File("img/tela-catalogo.png")); 
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar a imagem de fundo: " + e.getMessage());
-        }
+        imagemFundo = GerenciadorDeImagens.obterImagemOriginal("img/tela-catalogo.png");
 
         JPanel painelFundo = new JPanel() {
             @Override
@@ -34,7 +26,6 @@ public class TelaCatalogo extends JFrame {
         painelFundo.setLayout(null); 
 
         // --- NOVO BOTÃO VOLTAR COM A SUA SKIN ---
-        // Coloquei a proporção de 140x80 como base, mas você pode ajustar esses dois números como preferir!
         JButton btnVoltar = criarBotaoComImagem("img/botao-voltar.png", 140, 80);
         
         // Posição na tela: X=30, Y=30 (Canto superior esquerdo) e o tamanho exato da arte
@@ -120,17 +111,13 @@ public class TelaCatalogo extends JFrame {
         return card;
     }
 
-    // --- FUNÇÃO PARA RENDERIZAR SKINS EM BOTÕES ---
+    // --- FUNÇÃO PARA RENDERIZAR SKINS EM BOTÕES CONECTADA AO GERENCIADOR ---
     private JButton criarBotaoComImagem(String caminhoImagem, int largura, int altura) {
         JButton botao = new JButton();
 
-        try {
-            ImageIcon iconeOriginal = new ImageIcon(caminhoImagem);
-            Image imagemEscalada = iconeOriginal.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-            botao.setIcon(new ImageIcon(imagemEscalada));
-        } catch (Exception e) {
-            System.out.println("Não foi possível carregar a arte: " + caminhoImagem);
-        }
+        // Puxa do nosso cofre global!
+        Icon icone = GerenciadorDeImagens.obterIcone(caminhoImagem, largura, altura);
+        if (icone != null) botao.setIcon(icone);
 
         botao.setContentAreaFilled(false);  
         botao.setBorderPainted(false);      
