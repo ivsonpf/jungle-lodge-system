@@ -1,5 +1,6 @@
 package pousadaselva.model;
 
+import pousadaselva.exception.PeriodoInvalidoException;
 import java.util.ArrayList;
 
 public class Reserva {
@@ -10,8 +11,14 @@ public class Reserva {
     private int quantidadeDiarias; // Simplificando o Check-in/Check-out para focar na POO
     private ArrayList<PacoteTuristico> pacotes;
 
-    // Construtor
-    public Reserva(Hospede hospede, Acomodacao acomodacao, int quantidadeDiarias) {
+    // Construtor com a Exceção Personalizada
+    public Reserva(Hospede hospede, Acomodacao acomodacao, int quantidadeDiarias) throws PeriodoInvalidoException {
+        
+        // REGRA DE NEGÓCIO: A diária não pode ser zero ou negativa
+        if (quantidadeDiarias <= 0) {
+            throw new PeriodoInvalidoException("A reserva deve ter pelo menos 1 diária!");
+        }
+
         this.hospede = hospede;
         this.acomodacao = acomodacao;
         this.quantidadeDiarias = quantidadeDiarias;
@@ -53,4 +60,12 @@ public class Reserva {
     public Acomodacao getAcomodacao() { return acomodacao; }
     public int getQuantidadeDiarias() { return quantidadeDiarias; }
     public ArrayList<PacoteTuristico> getPacotes() { return pacotes; }
+
+    // Método para o Update (Atualizar a reserva) reutilizando a regra de negócio
+    public void setQuantidadeDiarias(int quantidadeDiarias) throws pousadaselva.exception.PeriodoInvalidoException {
+        if (quantidadeDiarias <= 0) {
+            throw new pousadaselva.exception.PeriodoInvalidoException("A reserva deve ter pelo menos 1 diária!");
+        }
+        this.quantidadeDiarias = quantidadeDiarias;
+    }
 }

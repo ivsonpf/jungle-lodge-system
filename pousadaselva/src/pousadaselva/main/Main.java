@@ -9,6 +9,7 @@ import pousadaselva.model.HospedeNacional;
 import pousadaselva.model.HospedeEstrangeiro;
 import pousadaselva.model.PacoteTuristico;
 import pousadaselva.model.Reserva;
+import pousadaselva.exception.PeriodoInvalidoException;
 import pousadaselva.service.RegrasSustentabilidade;
 import pousadaselva.service.CalculadoraTarifa;
 
@@ -39,14 +40,16 @@ public class Main {
 
         System.out.println("🌿 BEM-VINDO AO SISTEMA POUSADA SELVA 🌿");
 
-        // 2. MENU INTERATIVO EXPANDIDO
+        // 2. MENU INTERATIVO EXPANDIDO (AGORA COM CRUD COMPLETO)
         do {
             System.out.println("\n========= MENU PRINCIPAL =========");
             System.out.println("1 - Ver Catálogo de Acomodações");
             System.out.println("2 - Ver Pacotes Turísticos");
             System.out.println("3 - Cadastrar Nova Reserva");
             System.out.println("4 - Listar Reservas Ativas");
-            System.out.println("5 - Sair do Sistema");
+            System.out.println("5 - Atualizar Diárias de uma Reserva");
+            System.out.println("6 - Cancelar/Remover Reserva");
+            System.out.println("7 - Sair do Sistema");
             System.out.print("Escolha uma opção: ");
 
             try {
@@ -118,26 +121,32 @@ public class Main {
                         System.out.print("Quantidade de Diárias: ");
                         int diarias = scanner.nextInt();
 
-                        // D. CRIANDO A RESERVA
-                        Reserva novaReserva = new Reserva(hospede, acomodacaoEscolhida, diarias);
+                        // D. CRIANDO A RESERVA COM TRATAMENTO DE EXCEÇÃO
+                        try {
+                            Reserva novaReserva = new Reserva(hospede, acomodacaoEscolhida, diarias);
 
-                        // E. ADICIONANDO PACOTES (Opcional)
-                        System.out.print("Deseja adicionar pacotes de passeio? (1-Sim / 2-Não): ");
-                        int addPacote = scanner.nextInt();
-                        if (addPacote == 1) {
-                            System.out.print("Digite o código do pacote (0 a " + (listaPacotes.size()-1) + "): ");
-                            int codPacote = scanner.nextInt();
-                            if (codPacote >= 0 && codPacote < listaPacotes.size()) {
-                                novaReserva.adicionarPacote(listaPacotes.get(codPacote));
-                            } else {
-                                System.out.println("Código de pacote inválido.");
+                            // E. ADICIONANDO PACOTES (Opcional)
+                            System.out.print("Deseja adicionar pacotes de passeio? (1-Sim / 2-Não): ");
+                            int addPacote = scanner.nextInt();
+                            if (addPacote == 1) {
+                                System.out.print("Digite o código do pacote (0 a " + (listaPacotes.size()-1) + "): ");
+                                int codPacote = scanner.nextInt();
+                                if (codPacote >= 0 && codPacote < listaPacotes.size()) {
+                                    novaReserva.adicionarPacote(listaPacotes.get(codPacote));
+                                } else {
+                                    System.out.println("Código de pacote inválido.");
+                                }
                             }
-                        }
 
-                        // F. FINALIZANDO E CALCULANDO
-                        listaReservas.add(novaReserva);
-                        novaReserva.exibirResumoReserva();
-                        calculadora.processarFatura(novaReserva);
+                            // F. FINALIZANDO E CALCULANDO
+                            listaReservas.add(novaReserva);
+                            novaReserva.exibirResumoReserva();
+                            calculadora.processarFatura(novaReserva);
+                            
+                        } catch (PeriodoInvalidoException ex) {
+                            System.out.println("\n❌ ERRO NA RESERVA: " + ex.getMessage());
+                            System.out.println("Operação cancelada. Tente novamente com um período válido.");
+                        }
                         break;
 
                     case 4:
@@ -152,6 +161,54 @@ public class Main {
                         break;
                         
                     case 5:
+                        System.out.println("\n--- Atualizar Reserva ---");
+                        System.out.print("Digite o documento (CPF/Passaporte) do hóspede: ");
+                        String docAtualizar = scanner.nextLine();
+                        boolean encontradaUpdate = false;
+
+                        for (Reserva r : listaReservas) {
+                            if (r.getHospede().getDocumento().equals(docAtualizar)) {
+                                encontradaUpdate = true;
+                                System.out.println("Reserva encontrada! Diárias atuais: " + r.getQuantidadeDiarias());
+                                System.out.print("Digite a nova quantidade de diárias: ");
+                                int novasDiarias = scanner.nextInt();
+                                
+                                try {
+                                    r.setQuantidadeDiarias(novasDiarias); // Usa o setter com tratamento de erro
+                                    System.out.println("✅ Reserva atualizada com sucesso!");
+                                    calculadora.processarFatura(r); // Recalcula e mostra a tarifa nova
+                                } catch (PeriodoInvalidoException ex) {
+                                    System.out.println("❌ ERRO NA ATUALIZAÇÃO: " + ex.getMessage());
+                                }
+                                break;
+                            }
+                        }
+                        if (!encontradaUpdate) {
+                            System.out.println("Reserva não encontrada para o documento informado.");
+                        }
+                        break;
+
+                    case 6:
+                        System.out.println("\n--- Cancelar Reserva ---");
+                        System.out.print("Digite o documento (CPF/Passaporte) do hóspede: ");
+                        String docRemover = scanner.nextLine();
+                        boolean encontradaDelete = false;
+
+                        // Percorre a lista para achar e deletar
+                        for (int i = 0; i < listaReservas.size(); i++) {
+                            if (listaReservas.get(i).getHospede().getDocumento().equals(docRemover)) {
+                                listaReservas.remove(i);
+                                encontradaDelete = true;
+                                System.out.println("🗑️ Reserva cancelada e removida do sistema com sucesso!");
+                                break;
+                            }
+                        }
+                        if (!encontradaDelete) {
+                            System.out.println("Reserva não encontrada para o documento informado.");
+                        }
+                        break;
+                        
+                    case 7:
                         System.out.println("\n🌿 Encerrando o Sistema Pousada Selva. Até logo! 🌿");
                         break;
                         
@@ -163,7 +220,7 @@ public class Main {
                 scanner.nextLine(); 
             }
 
-        } while (opcao != 5);
+        } while (opcao != 7);
 
         scanner.close();
     }
