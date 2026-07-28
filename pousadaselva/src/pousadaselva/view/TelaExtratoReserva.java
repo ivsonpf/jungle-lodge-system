@@ -54,7 +54,7 @@ public class TelaExtratoReserva extends JFrame {
             "--------------------------------------------------\n" +
             " DADOS DO TITULAR\n" +
             "--------------------------------------------------\n" +
-            " Hóspede: Bryan Delícia\n" +
+            " Hóspede: Ivson Freire\n" +
             " Doc/Passaporte: 123.456.789-00\n" +
             " Estrangeiro: Não\n" +
             "\n" +
